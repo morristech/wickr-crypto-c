@@ -97,8 +97,3 @@ else ()
     endif ()
 
 endif ()
-
-Message("Using OpenSSL: ${OPENSSL_ROOT_DIR}")
-Message("OpenSSL include: ${OPENSSL_INCLUDE_DIR}")
-Message("OpenSSL libraries: ${OPENSSL_LIBRARIES}")
-Message("OpenSSL libcrypto: ${OPENSSL_CRYPTO_LIBRARY}")

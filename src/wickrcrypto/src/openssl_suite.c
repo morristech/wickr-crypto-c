@@ -15,6 +15,23 @@
 #include <openssl/kdf.h>
 #endif
 
+/* FIPS Support */
+#ifdef FIPS
+
+#include <openssl/fips.h>
+#include <assert.h>
+
+bool openssl_enable_fips_mode() 
+{
+    if (FIPS_mode()) {
+        return true;
+    }
+
+    return FIPS_mode_set(1) == 1 ? true : false;
+}
+
+#endif
+
 static const EVP_MD *__openssl_get_digest_mode(wickr_digest_t mode)
 {
     switch (mode.digest_id) {

@@ -14,6 +14,7 @@ matrix:
       env:
       - OPENSSL="1.0.2"
       - TESTS=true
+      - FIPS=FALSE
     - os: linux
       dist: trusty
       sudo: required
@@ -21,6 +22,7 @@ matrix:
       env:
       - OPENSSL="1.1.0"
       - TESTS=true
+      - FIPS=FALSE
     - os: linux
       dist: trusty
       sudo: required
@@ -28,10 +30,25 @@ matrix:
       env:
       - OPENSSL="BUILD"
       - TESTS=true
+      - FIPS=FALSE
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      env:
+      - OPENSSL="BUILD"
+      - FIPS=TRUE
+      - TESTS=TRUE
     - os: osx
       osx_image: xcode9.4
       env:
       - TESTS=true
+      - FIPS=FALSE
+     - os: osx
+      osx_image: xcode9.4
+      env:
+      - TESTS=true
+      - FIPS=TRUE
     - os: osx
       osx_image: xcode9.4
       env:
@@ -40,16 +57,37 @@ matrix:
       dist: trusty
       sudo: required
       env:
+      - FIPS=FALSE
       - ANDROID="armeabi-v7a"
     - os: linux 
       dist: trusty
       sudo: required
       env:
+      - FIPS=FALSE
       - ANDROID="armeabi"
     - os: linux 
       dist: trusty
       sudo: required
       env:
+      - FIPS=FALSE
+      - ANDROID="x86"
+    - os: linux 
+      dist: trusty
+      sudo: required
+      env:
+      - FIPS=TRUE
+      - ANDROID="armeabi-v7a"
+    - os: linux 
+      dist: trusty
+      sudo: required
+      env:
+      - FIPS=TRUE
+      - ANDROID="armeabi"
+    - os: linux 
+      dist: trusty
+      sudo: required
+      env:
+      - FIPS=TRUE
       - ANDROID="x86"
     - os: linux
       dist: trusty
@@ -109,7 +147,7 @@ script:
        elif [[ ! -z "${JAVA}" ]]; then
             cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=true -DBUILD_TESTS=true -DBUILD_JAVA=true ../
        else
-            $HOME/cmake/cmake-3.9.6-Linux-x86_64/bin/cmake ${LOCAL_OPTIONS} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=true ../
+            $HOME/cmake/cmake-3.9.6-Linux-x86_64/bin/cmake ${LOCAL_OPTIONS} -DCMAKE_BUILD_TYPE=Release -DFIPS=${FIPS} -DBUILD_TESTS=true ../
        fi
    fi 
  - |
@@ -125,7 +163,7 @@ script:
        elif [[ ! -z "${JAVA}" ]]; then
            cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=true -DBUILD_TESTS=true -DBUILD_OPENSSL=true -DBUILD_JAVA=true ../
        else
-           cmake -DBUILD_OPENSSL=true -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=true ../
+           cmake -DBUILD_OPENSSL=true -DCMAKE_BUILD_TYPE=Release -DFIPS=${FIPS} -DBUILD_TESTS=true ../
        fi
    fi
  - if [[ -z ${NODE} ]]; then make; fi

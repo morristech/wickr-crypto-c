@@ -30,6 +30,10 @@
 #include "ecdsa.h"
 #include "eckey.h"
 
+#ifdef FIPS
+bool openssl_enable_fips_mode();
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
