@@ -26,7 +26,7 @@ build_script:
   - rm -rf build
   - mkdir build
   - cd build
-  - cmake -DBUILD_OPENSSL=true -DFIPS=$env:fips -DBUILD_TESTS=true -G "Visual Studio 14 2015" ..
+  - cmake -DBUILD_OPENSSL=true -DFIPS=%fips% -DBUILD_TESTS=true -G "Visual Studio 14 2015" ..
   - msbuild WickrCryptoC.sln /p:Configuration=Release
   - cd test\Release
   - crypto_test.exe --ci
