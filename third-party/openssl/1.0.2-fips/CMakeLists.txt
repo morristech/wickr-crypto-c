@@ -37,7 +37,7 @@ macro(build_fips_module)
             set(FIPS_CONFIGURE perl Configure VC-WIN32)
         endif()
         set(FIPS_BUILD ms\\do_fips.bat)
-        set(FIPS_INSTALL nmake -f ms\\nt.mak install)
+        set(FIPS_INSTALL nmake -f ms\\ntdll.mak install)
     endif ()
 
     ExternalProject_add(
