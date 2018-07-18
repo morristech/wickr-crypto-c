@@ -89,10 +89,10 @@ macro(build_openssl)
 
 
         if(CMAKE_GENERATOR MATCHES "(Win64)")
-            set(OSSL_OPTIONS no-ssl2 no-ssl3 no-comp enable-ec_nistp_64_gcc_128 --prefix=${CMAKE_CURRENT_BINARY_DIR} --with-fipsdir=${FIPS_PATH})
+            set(OSSL_OPTIONS no-ssl2 no-ssl3 no-comp enable-ec_nistp_64_gcc_128 --prefix=${CMAKE_CURRENT_BINARY_DIR} --with-fipslibdir=${FIPS_PATH})
             set(OSSL_CONFIGURE perl Configure VC-WIN64 fips ${OSSL_OPTIONS})
         else()
-            set(OSSL_OPTIONS no-ssl2 no-ssl3 no-comp --prefix=${CMAKE_CURRENT_BINARY_DIR} --with-fipsdir=c:\\usr\\local\\ssl\\fips-2.0)
+            set(OSSL_OPTIONS no-ssl2 no-ssl3 no-comp --prefix=${CMAKE_CURRENT_BINARY_DIR} --with-fipslibdir=C:\\usr\\local\\ssl\\fips-2.0)
             set(OSSL_CONFIGURE perl Configure VC-WIN32 fips ${OSSL_OPTIONS})
         endif()
 
