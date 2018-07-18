@@ -28,7 +28,7 @@ macro(build_fips_module)
             message(FATAL_ERROR TODO: SUPPORT IOS)
         else ()
             set(FIPS_CC "/usr/bin/clang -mmacosx-version-min=${OPENSSL_OSX_DEPLOYMENT_TARGET}")
-            set(FIPS_CONFIGURE export CC=${FIPS_CC} && ./Configure darwin64-x86_64-cc --prefix=${FIPS_PATH})
+            set(FIPS_CONFIGURE export CC=${FIPS_CC} && chmod +x Configure && ./Configure darwin64-x86_64-cc --prefix=${FIPS_PATH})
         endif ()
     elseif (ANDROID)
         setup_android_env()
@@ -36,20 +36,22 @@ macro(build_fips_module)
         set(FIPS_BUILD ${ANDROID_ENV} make)
         set(FIPS_INSTALL ${ANDROID_ENV} make install_sw)
     elseif (WIN32)
+        set(FIPS_PATH C:\usr\local\ssl\fips-2.0)
         if(CMAKE_GENERATOR MATCHES "(Win64)")
-            set(FIPS_CONFIGURE perl Configure VC-WIN64 --prefix=${CMAKE_CURRENT_BINARY_DIR})
+            set(FIPS_CONFIGURE echo No Configure Step)
         else()
-            set(FIPS_CONFIGURE perl Configure VC-WIN32 --prefix=${CMAKE_CURRENT_BINARY_DIR})
+            set(FIPS_CONFIGURE echo No Configure Step)
         endif()
+        set(FIPS_PATH ${CURRENT_SOURCE_DIR})
         set(FIPS_BUILD ms\\do_fips.bat)
-        set(FIPS_INSTALL "copy out32dll\* ${CMAKE_CURRENT_BINARY_DIR}/lib")
+        set(FIPS_INSTALL echo No Configure Step)
     endif ()
 
     ExternalProject_add(
         openssl_fips
         URL ${FIPS_URL}
         URL_HASH SHA256=${FIPS_HASH}
-        CONFIGURE_COMMAND chmod +x Configure && ${FIPS_CONFIGURE}
+        CONFIGURE_COMMAND ${FIPS_CONFIGURE}
         BUILD_COMMAND ${FIPS_BUILD}
         INSTALL_COMMAND ${FIPS_INSTALL}
         BUILD_IN_SOURCE 1)
@@ -90,6 +92,9 @@ macro(build_openssl)
         set(OSSL_BUILD ${ANDROID_ENV} make depend && ${ANDROID_ENV} make)
         set(OSSL_INSTALL ${ANDROID_ENV} make install_sw)
     elseif (WIN32)
+
+        set(OSSL_OPTIONS shared no-static no-ssl2 no-ssl3 no-comp enable-ec_nistp_64_gcc_128 --with-fipslibdir=${FIPS_PATH} --openssldir=${CMAKE_CURRENT_BINARY_DIR})
+
         if(CMAKE_GENERATOR MATCHES "(Win64)")
             set(OSSL_CONFIGURE perl Configure VC-WIN64 fips ${OSSL_OPTIONS})
         else()
